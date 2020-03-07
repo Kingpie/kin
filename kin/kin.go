@@ -2,9 +2,10 @@ package kin
 
 import (
 	"net/http"
+	"strings"
 )
 
-//http处理函数
+//处理函数
 type HandlerFunc func(ctx *Context)
 
 //ServeHTTP实例
@@ -38,7 +39,16 @@ func (engine *Engine) POST(pattern string, handler HandlerFunc) {
 
 //interface实现
 func (engine *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	//中间件
+	var middlewares []HandlerFunc
+	for _, group := range engine.groups {
+		if strings.HasPrefix(req.URL.Path, group.prefix) {
+			middlewares = append(middlewares, group.middlewares...)
+		}
+	}
+
 	ctx := newContext(w, req)
+	ctx.handlers = middlewares
 	engine.router.handle(ctx)
 }
 

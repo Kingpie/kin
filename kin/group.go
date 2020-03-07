@@ -1,10 +1,14 @@
 package kin
 
 type RouterGroup struct {
-	prefix     string
-	middleware []HandlerFunc
-	parent     *RouterGroup
-	engine     *Engine
+	prefix      string
+	middlewares []HandlerFunc
+	parent      *RouterGroup
+	engine      *Engine
+}
+
+func (group *RouterGroup) Use(middlewares ...HandlerFunc) {
+	group.middlewares = append(group.middlewares, middlewares...)
 }
 
 func (group *RouterGroup) Group(prefix string) *RouterGroup {
