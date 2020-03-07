@@ -16,6 +16,7 @@ type Context struct {
 	//请求信息
 	Path   string
 	Method string
+	Params map[string]string
 
 	//响应信息
 	StatusCode int
@@ -28,6 +29,11 @@ func newContext(w http.ResponseWriter, req *http.Request) *Context {
 		Path:   req.URL.Path,
 		Method: req.Method,
 	}
+}
+
+func (ctx *Context) GetParam(key string) string {
+	value, _ := ctx.Params[key]
+	return value
 }
 
 func (ctx *Context) FormValue(key string) string {
