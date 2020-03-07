@@ -1,21 +1,21 @@
 package main
 
 import (
-	"fmt"
 	"kin/kin"
 	"net/http"
 )
 
 func main() {
 	engine := kin.New()
-	engine.Get("/hehe", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "URL=%q\n", r.URL.Path)
+	engine.Get("/html", func(ctx *kin.Context) {
+		ctx.ToHTML(http.StatusOK, "<h1>Hello Kin</h1>")
 	})
 
-	engine.Get("/haha", func(w http.ResponseWriter, r *http.Request) {
-		for k, v := range r.Header {
-			fmt.Fprintf(w, "Header[%q] = %q\n", k, v)
-		}
+	engine.POST("/json", func(ctx *kin.Context) {
+		ctx.ToJson(http.StatusOK, kin.M{
+			"user": ctx.FormValue("user"),
+			"pass": ctx.FormValue("pass"),
+		})
 	})
 
 	engine.Run(":9999")
