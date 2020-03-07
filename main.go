@@ -7,15 +7,10 @@ import (
 
 func main() {
 	engine := kin.New()
-	engine.Get("/html", func(ctx *kin.Context) {
-		ctx.ToHTML(http.StatusOK, "<h1>Hello Kin</h1>")
-	})
 
-	engine.POST("/json", func(ctx *kin.Context) {
-		ctx.ToJson(http.StatusOK, kin.M{
-			"user": ctx.FormValue("user"),
-			"pass": ctx.FormValue("pass"),
-		})
+	v1 := engine.Group("/v1")
+	v1.GET("/hello/:id", func(ctx *kin.Context) {
+		ctx.ToString(http.StatusOK, "hello id = %s\n", ctx.GetParam("id"))
 	})
 
 	engine.Run(":9999")

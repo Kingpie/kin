@@ -10,10 +10,15 @@ type HandlerFunc func(ctx *Context)
 //ServeHTTP实例
 type Engine struct {
 	router *router
+	*RouterGroup
+	groups []*RouterGroup
 }
 
 func New() *Engine {
-	return &Engine{router: newRouter()}
+	engine := &Engine{router: newRouter()}
+	engine.RouterGroup = &RouterGroup{engine: engine}
+	engine.groups = []*RouterGroup{engine.RouterGroup}
+	return engine
 }
 
 //设置路由
