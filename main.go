@@ -26,5 +26,7 @@ func main() {
 		ctx.ToString(http.StatusOK, "hello id = %s\n", ctx.GetParam("id"))
 	})
 
+	engine.Static("/file", "/Users/kingpie/Documents/code/perfbook")
+
 	engine.Run(":9999")
 }

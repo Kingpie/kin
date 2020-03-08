@@ -1,5 +1,10 @@
 package kin
 
+import (
+	"net/http"
+	"path"
+)
+
 type RouterGroup struct {
 	prefix      string
 	middlewares []HandlerFunc
@@ -33,4 +38,24 @@ func (group *RouterGroup) GET(pattern string, handler HandlerFunc) {
 
 func (group *RouterGroup) POST(pattern string, handler HandlerFunc) {
 	group.addRouter("POST", pattern, handler)
+}
+
+func (group *RouterGroup) createStaticHandler(relativePath string, fs http.FileSystem) HandlerFunc {
+	realPath := path.Join(group.prefix, relativePath)
+	fileServer := http.StripPrefix(realPath, http.FileServer(fs))
+	return func(ctx *Context) {
+		file := ctx.GetParam("filepath")
+		if _, err := fs.Open(file); err != nil {
+			ctx.SetStatus(http.StatusNotFound)
+			return
+		}
+
+		fileServer.ServeHTTP(ctx.Writer, ctx.Req)
+	}
+}
+
+func (group *RouterGroup) Static(relativePath string, root string) {
+	handler := group.createStaticHandler(relativePath, http.Dir(root))
+	urlPattern := path.Join(relativePath, "/*filepath")
+	group.GET(urlPattern, handler)
 }
