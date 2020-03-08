@@ -22,6 +22,13 @@ func New() *Engine {
 	return engine
 }
 
+//默认使用log和recovery
+func Default() *Engine {
+	engine := New()
+	engine.Use(Logger(), Recovery())
+	return engine
+}
+
 //设置路由
 func (engine *Engine) addRoute(method string, pattern string, handler HandlerFunc) {
 	engine.router.addRoute(method, pattern, handler)

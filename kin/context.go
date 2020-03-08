@@ -53,6 +53,11 @@ func (ctx *Context) FormValue(key string) string {
 	return ctx.Req.FormValue(key)
 }
 
+func (ctx *Context) Fail(code int, err string) {
+	ctx.index = len(ctx.handlers)
+	ctx.ToJson(code, M{"err_msg:": err})
+}
+
 func (ctx *Context) Query(key string) string {
 	return ctx.Req.URL.Query().Get(key)
 }
