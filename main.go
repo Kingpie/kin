@@ -5,32 +5,43 @@ import (
 	"net/http"
 )
 
-func onlyForV1() kin.HandlerFunc {
+func onlyForV2() kin.HandlerFunc {
 	return func(ctx *kin.Context) {
-		ctx.ToString(http.StatusOK, "hehe\n")
+		ctx.ToString(http.StatusOK, "haha\n")
 	}
 }
 
 func main() {
 	engine := kin.New()
-	engine.Use(kin.Logger(), kin.Recovery())
 
-	//v1 := engine.Group("/v1")
-	//v1.Use(onlyForV1())
-	//v1.GET("/hello/:id", func(ctx *kin.Context) {
-	//	ctx.ToString(http.StatusOK, "hello id = %s\n", ctx.GetParam("id"))
-	//})
-	//
-	//v2 := engine.Group("/v2")
-	//v2.GET("/hello/:id", func(ctx *kin.Context) {
-	//	ctx.ToString(http.StatusOK, "hello id = %s\n", ctx.GetParam("id"))
-	//})
-	//
-	//engine.Static("/file", "/Users/kingpie/Documents/code/perfbook")
+	//direct route
+	engine.Get("/hello", func(ctx *kin.Context) {
+		ctx.ToString(http.StatusOK, "hello\n")
+	})
+
+	//use group route
+	v1 := engine.Group("/v1")
+	v1.POST("/hello", func(ctx *kin.Context) {
+		ctx.ToJson(http.StatusOK, kin.M{"err_msg": "success"})
+	})
+
+	//dynamic route
+	v1.GET("/hello/:id", func(ctx *kin.Context) {
+		ctx.ToString(http.StatusOK, "hello id = %s\n", ctx.GetParam("id"))
+	})
+
+	//middleware
+	v2 := engine.Group("/v2")
+	v2.Use(onlyForV2())
+	v2.GET("/lala", func(ctx *kin.Context) {
+		ctx.ToString(http.StatusOK, "111\n")
+	})
+
+	//recovery
 	engine.Get("/panic", func(ctx *kin.Context) {
 		str := []string{"abc"}
 		ctx.ToString(http.StatusOK, str[10])
 	})
 
-	engine.Run(":9999")
+	engine.Run(":9527")
 }
