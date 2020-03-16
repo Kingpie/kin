@@ -21,7 +21,7 @@ type Context struct {
 	//响应信息
 	StatusCode int
 
-	//中间件
+	//处理函数
 	handlers []HandlerFunc
 	index    int
 }
