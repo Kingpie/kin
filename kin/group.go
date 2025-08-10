@@ -40,6 +40,36 @@ func (group *RouterGroup) POST(pattern string, handler HandlerFunc) {
 	group.addRouter("POST", pattern, handler)
 }
 
+func (group *RouterGroup) PUT(pattern string, handler HandlerFunc) {
+	group.addRouter("PUT", pattern, handler)
+}
+
+func (group *RouterGroup) DELETE(pattern string, handler HandlerFunc) {
+	group.addRouter("DELETE", pattern, handler)
+}
+
+func (group *RouterGroup) PATCH(pattern string, handler HandlerFunc) {
+	group.addRouter("PATCH", pattern, handler)
+}
+
+func (group *RouterGroup) HEAD(pattern string, handler HandlerFunc) {
+	group.addRouter("HEAD", pattern, handler)
+}
+
+func (group *RouterGroup) OPTIONS(pattern string, handler HandlerFunc) {
+	group.addRouter("OPTIONS", pattern, handler)
+}
+
+func (group *RouterGroup) Any(pattern string, handler HandlerFunc) {
+	group.addRouter("GET", pattern, handler)
+	group.addRouter("POST", pattern, handler)
+	group.addRouter("PUT", pattern, handler)
+	group.addRouter("DELETE", pattern, handler)
+	group.addRouter("PATCH", pattern, handler)
+	group.addRouter("HEAD", pattern, handler)
+	group.addRouter("OPTIONS", pattern, handler)
+}
+
 func (group *RouterGroup) createStaticHandler(relativePath string, fs http.FileSystem) HandlerFunc {
 	realPath := path.Join(group.prefix, relativePath)
 	fileServer := http.StripPrefix(realPath, http.FileServer(fs))
