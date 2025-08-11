@@ -12,7 +12,7 @@ func onlyForV2() kin.HandlerFunc {
 }
 
 func main() {
-	engine := kin.New()
+	engine := kin.Default()
 
 	//static route
 	engine.Static("/assets", "./static")
