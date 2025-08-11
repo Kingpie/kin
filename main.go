@@ -14,6 +14,9 @@ func onlyForV2() kin.HandlerFunc {
 func main() {
 	engine := kin.New()
 
+	//static route
+	engine.Static("/assets", "./static")
+
 	//direct route
 	engine.Get("/hello", func(ctx *kin.Context) {
 		ctx.ToString(http.StatusOK, "hello\n")
