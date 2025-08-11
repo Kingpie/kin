@@ -42,7 +42,7 @@ func (r *router) addRoute(method string, pattern string, handler HandlerFunc) {
 	if _, ok := r.roots[method]; !ok {
 		r.roots[method] = &node{}
 	}
-	r.roots[method].insert(pattern, parts, 0)
+	r.roots[method].insert(pattern, parts)
 }
 
 func (r *router) handle(ctx *Context) {
@@ -69,7 +69,7 @@ func (r *router) getRoute(method string, path string) (*node, map[string]string)
 		return nil, nil
 	}
 
-	n := root.search(searchParts, 0)
+	n := root.search(searchParts)
 
 	if n != nil {
 		parts := parsePattern(n.pattern)

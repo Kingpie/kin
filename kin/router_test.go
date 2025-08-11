@@ -28,7 +28,8 @@ func TestParsePattern(t *testing.T) {
 func TestGetRoute(t *testing.T) {
 	r := newTestRouter()
 	n, ps := r.getRoute("GET", "/hello/tom")
-
 	fmt.Printf("matched path: %s, params['name']: %s\n", n.pattern, ps["name"])
 
+	n, ps = r.getRoute("GET", "/assets/test/file1.png")
+	fmt.Printf("matched path: %s, params['filepath']: %s\n", n.pattern, ps["filepath"])
 }

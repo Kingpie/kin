@@ -11,6 +11,6 @@ func Logger() HandlerFunc {
 
 		ctx.Next()
 
-		log.Printf("uri:%s|code:%d|time:%v", ctx.StatusCode, ctx.Req.RequestURI, time.Since(t))
+		log.Printf("uri:%s|code:%d|time:%v", ctx.Req.RequestURI, ctx.StatusCode, time.Since(t))
 	}
 }
