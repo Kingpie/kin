@@ -24,6 +24,7 @@ type Context struct {
 	//处理函数
 	handlers []HandlerFunc
 	index    int
+	engine   *Engine
 }
 
 func newContext(w http.ResponseWriter, req *http.Request) *Context {
@@ -96,4 +97,12 @@ func (ctx *Context) ToHTML(code int, html string) {
 	ctx.SetHeader("Content-Type", "text/html")
 	ctx.SetStatus(code)
 	ctx.Writer.Write([]byte(html))
+}
+
+func (c *Context) HTML(code int, name string, data interface{}) {
+	c.SetHeader("Content-Type", "text/html")
+	c.SetStatus(code)
+	if err := c.engine.htmlTemplates.ExecuteTemplate(c.Writer, name, data); err != nil {
+		c.Fail(500, err.Error())
+	}
 }
