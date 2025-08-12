@@ -6,7 +6,11 @@ func main() {
 	engine := kin.Default()
 
 	//static route
+	engine.LoadHTMLGlob("templates/*")
 	engine.Static("/assets", "./static")
+	engine.Get("/", func(ctx *kin.Context) {
+		ctx.HTML(http.StatusOK, "test.html", nil)
+	})
 
 	//direct route
 	engine.Get("/hello", func(ctx *kin.Context) {
